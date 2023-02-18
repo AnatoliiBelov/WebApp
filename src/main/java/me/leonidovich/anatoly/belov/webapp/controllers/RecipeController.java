@@ -6,7 +6,8 @@ import me.leonidovich.anatoly.belov.webapp.model.Recipe;
 import me.leonidovich.anatoly.belov.webapp.service.impl.RecipesServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/recipe")
+@RestController
+@RequestMapping("/recipe")
 public class RecipeController {
     private RecipesServiceImpl recipesService;
 

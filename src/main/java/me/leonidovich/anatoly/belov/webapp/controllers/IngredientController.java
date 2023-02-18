@@ -7,7 +7,8 @@ import me.leonidovich.anatoly.belov.webapp.model.Ingredient;
 import me.leonidovich.anatoly.belov.webapp.service.impl.IngredientsServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/ingredient")
+@RestController
+@RequestMapping("/ingredient")
 public class IngredientController {
     private IngredientsServiceImpl ingredientsService;
 
