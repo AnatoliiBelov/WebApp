@@ -8,7 +8,7 @@ import java.io.File;
 public class FirstController {
     @GetMapping("/")
     public String appRun(){
-        return "Приложение запущено";
+        return "Приложение запущено ";
     }
 
     @GetMapping("/info")
