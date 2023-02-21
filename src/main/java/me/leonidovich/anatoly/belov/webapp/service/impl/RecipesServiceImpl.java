@@ -16,7 +16,7 @@ public class RecipesServiceImpl implements me.leonidovich.anatoly.belov.webapp.s
     private static Integer count = 0;
 
     @Override
-    public void addRecipe(Recipe recipe) throws RecipeIsNotCorrect {
+    public void addRecipe(Recipe recipe) {
         if (recipe==null
                 ||recipe.getName() == null
                 || recipe.getName().isEmpty()
@@ -31,11 +31,11 @@ public class RecipesServiceImpl implements me.leonidovich.anatoly.belov.webapp.s
     }
 
     @Override
-    public Recipe getRecipeById(int id) throws IdNotFound {
+    public Recipe getRecipeById(int id) {
         if (recipesMap.isEmpty()) {
             throw new IdNotFound("Список рецептов пока пуст");
         }
-        if (recipesMap.get(id) == null) {
+        if (!recipesMap.containsKey(id)) {
             throw new IdNotFound("Нет рецепта под таким номером.Введите номер от 1 до " + recipesMap.size());
         }
         return recipesMap.get(id);

@@ -16,7 +16,7 @@ public class IngredientsServiceImpl implements me.leonidovich.anatoly.belov.weba
     private static Integer count = 0;
 
     @Override
-    public void addIngredient(Ingredient ingredient) throws IngredientIsNotCorrect {
+    public void addIngredient(Ingredient ingredient) {
         if (ingredient.getName()==null
                 ||ingredient.getUnitOfMeasurement()==null
                 ||ingredient.getName().isEmpty()
@@ -28,11 +28,11 @@ public class IngredientsServiceImpl implements me.leonidovich.anatoly.belov.weba
     }
 
     @Override
-    public Ingredient getIngredientById(int id) throws IdNotFound {
+    public Ingredient getIngredientById(int id) {
         if (ingredientMap.isEmpty()) {
             throw new IdNotFound("Список ингредиентов пока пуст");
         }
-        if (ingredientMap.get(id) == null) {
+        if (!ingredientMap.containsKey(id)) {
             throw new IdNotFound("Нет ингредиента под таким номером.Введите номер от 1 до " + ingredientMap.size());
         }
 

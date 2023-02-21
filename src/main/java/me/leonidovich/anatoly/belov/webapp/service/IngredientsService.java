@@ -6,6 +6,6 @@ import me.leonidovich.anatoly.belov.webapp.model.Ingredient;
 import me.leonidovich.anatoly.belov.webapp.model.Recipe;
 
 public interface IngredientsService {
-    void addIngredient(Ingredient ingredient) throws IngredientIsNotCorrect;
+    void addIngredient(Ingredient ingredient);
     Ingredient getIngredientById(int id) throws IdNotFound;
 }

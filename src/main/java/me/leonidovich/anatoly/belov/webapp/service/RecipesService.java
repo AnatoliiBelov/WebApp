@@ -5,6 +5,6 @@ import me.leonidovich.anatoly.belov.webapp.exeption.RecipeIsNotCorrect;
 import me.leonidovich.anatoly.belov.webapp.model.Recipe;
 
 public interface RecipesService {
-    void addRecipe(Recipe recipe) throws RecipeIsNotCorrect;
+    void addRecipe(Recipe recipe);
     Recipe getRecipeById(int id) throws IdNotFound;
 }
