@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/recipe")
 public class RecipeController {
-    private RecipesService recipesService;
+    private final RecipesService recipesService;
 
     public RecipeController(RecipesService recipesService) {
         this.recipesService = recipesService;
@@ -21,7 +21,7 @@ public class RecipeController {
         recipesService.addRecipe(recipe);
 
     }
-    @GetMapping
+    @GetMapping("/{id}")
     public Recipe getRecipe(@PathVariable int id) {
        return recipesService.getRecipeById(id);
     }

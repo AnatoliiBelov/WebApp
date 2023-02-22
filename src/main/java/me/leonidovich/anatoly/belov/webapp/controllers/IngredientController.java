@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/ingredient")
 public class IngredientController {
-    private IngredientsService ingredientsService;
+    private final IngredientsService ingredientsService;
 
     public IngredientController(IngredientsService ingredientsService) {
         this.ingredientsService = ingredientsService;
@@ -21,7 +21,7 @@ public class IngredientController {
     public void addIngredient(@RequestBody Ingredient ingredient)  {
        ingredientsService.addIngredient(ingredient);
     }
-@GetMapping
+@GetMapping("/{id}")
     public Ingredient getIngredient(@PathVariable int id) {
        return ingredientsService.getIngredientById(id);
     }
