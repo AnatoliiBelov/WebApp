@@ -1,8 +1,18 @@
 package me.leonidovich.anatoly.belov.webapp.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import me.leonidovich.anatoly.belov.webapp.model.Ingredient;
 
+import me.leonidovich.anatoly.belov.webapp.model.Recipe;
 import me.leonidovich.anatoly.belov.webapp.service.IngredientsService;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/ingredient")
+@Tag(name="Ингредиенты", description = "CRUD-операции и другие эндпоинты")
 public class IngredientController {
     private final IngredientsService ingredientsService;
 
@@ -18,11 +29,22 @@ public class IngredientController {
     }
 
     @PostMapping
+    @Operation(
+            summary = "добавление ингредиента  в книгу ингредиентов",
+            description = "Ингредиенты нужно обязательно добавлять согласно схеме"
+    )
+    @ApiResponses(value = {@ApiResponse(
+            responseCode = "400",
+            description = "Проверьте, пожалуйста, Ваш ингредиент согласно схеме. Скорректируйте ингредиента и повторите попытку"
+    ),
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Отлично! Ингредиент добавлен"
+            )
+    }
+    )
     public ResponseEntity<Ingredient> addIngredient(@RequestBody Ingredient ingredient) {
-        if (ingredient.getName() == null
-                || ingredient.getUnitOfMeasurement() == null
-                || ingredient.getName().isEmpty()
-                || ingredient.getUnitOfMeasurement().isEmpty()) {
+        if (ObjectUtils.isEmpty(ingredient))  {
             return ResponseEntity.badRequest().body(ingredient);
         }
         ingredientsService.addIngredient(ingredient);
@@ -30,8 +52,28 @@ public class IngredientController {
     }
 
     @GetMapping("/{id}")
+    @Operation(
+            summary = "Получение ингредиента из книги ингредиентов",
+            description = "Поиск происходит по идентификационному номеру.Нужно указать id для получения ингредиента"
+    )
+    @ApiResponses(value = {@ApiResponse(
+            responseCode = "404",
+            description = "Нет ингредиента под таким номером"
+    ),
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Отлично! Ингредиент получен",
+                    content={
+                            @Content(mediaType = "json",
+                                    schema = @Schema(implementation = Ingredient.class)
+
+                                    )
+                    }
+            )
+    }
+    )
     public ResponseEntity<Ingredient> getIngredient(@PathVariable int id) {
-        if (ingredientsService.getIngredientMap().isEmpty()
+        if (ObjectUtils.isEmpty(ingredientsService.getIngredientMap())
                 || !ingredientsService.getIngredientMap().containsKey(id)) {
             return ResponseEntity.notFound().build();
         }
@@ -39,15 +81,31 @@ public class IngredientController {
     }
 
     @PutMapping("/{id}")
+    @Operation(
+            summary = "Редактирование ингредиента в книге ингредиентов",
+            description = "Поиск происходит по идентификационному номеру.Нужно указать id для редактирования ингредиента"
+    )
+    @ApiResponses(value = {@ApiResponse(
+            responseCode = "404",
+            description = "Нет ингредиента под таким номером"
+    ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Проверьте, пожалуйста, Ваш ингредиент согласно схеме. Скорректируйте ингредиент и повторите попытку"
+            ),
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Отлично! Рецепт изменен"
+
+            )
+    }
+    )
     public ResponseEntity<Ingredient> editIngredient(@PathVariable int id, @RequestBody Ingredient ingredient) {
-        if (ingredientsService.getIngredientMap().isEmpty()
+        if (ObjectUtils.isEmpty(ingredientsService.getIngredientMap())
                 || !ingredientsService.getIngredientMap().containsKey(id)) {
             return ResponseEntity.notFound().build();
         }
-        if (ingredient.getName() == null
-                || ingredient.getUnitOfMeasurement() == null
-                || ingredient.getName().isEmpty()
-                || ingredient.getUnitOfMeasurement().isEmpty()) {
+        if (ObjectUtils.isEmpty(ingredient)) {
             return ResponseEntity.badRequest().body(ingredient);
         }
         ingredientsService.editIngredient(id, ingredient);
@@ -55,8 +113,30 @@ public class IngredientController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Удаление ингредиента в книге ингредиентов",
+            description = "Поиск происходит по идентификационному номеру.Нужно указать id для удаления ингредиента"
+    )
+    @ApiResponses(value = {@ApiResponse(
+            responseCode = "404",
+            description = "Нет ингредиента под таким номером"
+    ),
+
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Отлично! Ингредиент удален",
+                    content={
+                            @Content(mediaType = "json",
+                                    schema = @Schema(implementation = Ingredient.class)
+
+                            )
+                    }
+
+            )
+    }
+    )
     public ResponseEntity<Ingredient> deleteIngredientById(@PathVariable int id) {
-        if (ingredientsService.getIngredientMap().isEmpty()
+        if (ObjectUtils.isEmpty(ingredientsService.getIngredientMap())
                 || !ingredientsService.getIngredientMap().containsKey(id)) {
             return ResponseEntity.notFound().build();
         }
@@ -66,8 +146,22 @@ public class IngredientController {
     }
 
     @DeleteMapping
+    @Operation(
+            summary = "Удаление всех ингредиентов в книге ингредиентов"
+    )
+    @ApiResponses(value = {@ApiResponse(
+            responseCode = "404",
+            description = "Книга ингредиентов уже пуста"
+    ),
+
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Отлично! Все ингредиенты удалены"
+            )
+    }
+    )
     public ResponseEntity<Ingredient> deleteAllIngredients() {
-        if (ingredientsService.getIngredientMap().isEmpty()) {
+        if (ObjectUtils.isEmpty(ingredientsService.getIngredientMap())) {
             return ResponseEntity.notFound().build();
         }
         ingredientsService.deleteAllIngredients();
@@ -75,8 +169,30 @@ public class IngredientController {
     }
 
     @GetMapping
+    @Operation(
+            summary = "Получение всех ингредиентов из книги"
+    )
+    @ApiResponses(value = {@ApiResponse(
+            responseCode = "404",
+            description = "Книга ингредиентов пуста"
+    ),
+
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Отлично!Список ингредиентов получен",
+                    content={
+                            @Content(mediaType = "json",
+                                    array = @ArraySchema(
+                                            schema = @Schema(implementation = Ingredient.class)
+
+                                    ))
+                    }
+
+            )
+    }
+    )
     public ResponseEntity<Map<Integer, Ingredient>> getAllIngredient() {
-        if (ingredientsService.getIngredientMap().isEmpty()
+        if (ObjectUtils.isEmpty(ingredientsService.getIngredientMap())
         ) {
             return ResponseEntity.notFound().build();
         }
