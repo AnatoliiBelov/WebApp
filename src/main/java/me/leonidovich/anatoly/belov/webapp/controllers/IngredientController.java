@@ -43,12 +43,12 @@ public class IngredientController {
             )
     }
     )
-    public ResponseEntity<Ingredient> addIngredient(@RequestBody Ingredient ingredient) {
+    public ResponseEntity<?> addIngredient(@RequestBody Ingredient ingredient) {
         if (ObjectUtils.isEmpty(ingredient))  {
             return ResponseEntity.badRequest().body(ingredient);
         }
-        ingredientsService.addIngredient(ingredient);
-        return ResponseEntity.ok().build();
+        int id = ingredientsService.addIngredient(ingredient);
+        return ResponseEntity.ok(id);
     }
 
     @GetMapping("/{id}")
@@ -64,7 +64,7 @@ public class IngredientController {
                     responseCode = "200",
                     description = "Отлично! Ингредиент получен",
                     content={
-                            @Content(mediaType = "json",
+                            @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = Ingredient.class)
 
                                     )
@@ -181,7 +181,7 @@ public class IngredientController {
                     responseCode = "200",
                     description = "Отлично!Список ингредиентов получен",
                     content={
-                            @Content(mediaType = "json",
+                            @Content(mediaType = "application/json",
                                     array = @ArraySchema(
                                             schema = @Schema(implementation = Ingredient.class)
 
@@ -194,7 +194,7 @@ public class IngredientController {
     public ResponseEntity<Map<Integer, Ingredient>> getAllIngredient() {
         if (ObjectUtils.isEmpty(ingredientsService.getIngredientMap())
         ) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(ingredientsService.getIngredientMap());
         }
         return ResponseEntity.ok().body(ingredientsService.getIngredientMap());
     }

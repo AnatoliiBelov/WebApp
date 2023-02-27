@@ -8,10 +8,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import me.leonidovich.anatoly.belov.webapp.model.Ingredient;
 import me.leonidovich.anatoly.belov.webapp.model.Recipe;
 import me.leonidovich.anatoly.belov.webapp.service.RecipesService;
-import me.leonidovich.anatoly.belov.webapp.service.impl.RecipesServiceImpl;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,13 +41,13 @@ public class RecipeController {
             )
     }
     )
-    public ResponseEntity<Recipe> addRecipe1(@RequestBody Recipe recipe) {
+    public ResponseEntity<?> addRecipe(@RequestBody Recipe recipe) {
         if (ObjectUtils.isEmpty(recipe)
         ) {
             return ResponseEntity.badRequest().body(recipe);
         }
-        recipesService.addRecipe(recipe);
-        return ResponseEntity.ok().build();
+        int id = recipesService.addRecipe(recipe);
+        return ResponseEntity.ok(id);
 
     }
 
@@ -66,7 +64,7 @@ public class RecipeController {
                     responseCode = "200",
                     description = "Отлично! Рецепт получен",
                     content={
-                            @Content(mediaType = "json",
+                            @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = Recipe.class)
 
                             )
@@ -130,7 +128,7 @@ public class RecipeController {
                     responseCode = "200",
                     description = "Отлично! Рецепт удален",
                     content={
-                            @Content(mediaType = "json",
+                            @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = Recipe.class)
 
                             )
@@ -183,7 +181,7 @@ public class RecipeController {
                     responseCode = "200",
                     description = "Отлично!Список рецептов получен",
                     content={
-                            @Content(mediaType = "json",
+                            @Content(mediaType = "application/json",
                                     array = @ArraySchema(
                                     schema = @Schema(implementation = Recipe.class)
 
@@ -195,7 +193,7 @@ public class RecipeController {
     )
     public ResponseEntity<Map<Integer, Recipe>> getAllRecipe() {
         if (ObjectUtils.isEmpty(recipesService.getRecipesMap())) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(recipesService.getRecipesMap());
         }
         return ResponseEntity.ok().body(recipesService.getRecipesMap());
     }

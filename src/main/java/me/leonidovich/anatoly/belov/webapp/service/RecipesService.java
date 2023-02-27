@@ -6,7 +6,7 @@ import me.leonidovich.anatoly.belov.webapp.model.Recipe;
 import java.util.Map;
 
 public interface RecipesService {
-    void addRecipe(Recipe recipe);
+    int addRecipe(Recipe recipe);
 
     Recipe getRecipeById(int id);
 

@@ -1,7 +1,12 @@
 package me.leonidovich.anatoly.belov.webapp.service.impl;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import me.leonidovich.anatoly.belov.webapp.model.Recipe;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,12 +14,20 @@ import java.util.Map;
 public class RecipesServiceImpl implements me.leonidovich.anatoly.belov.webapp.service.RecipesService {
 
 
-    private final Map<Integer, Recipe> recipesMap = new HashMap<>();
-    private static Integer count = 0;
+    private HashMap<Integer, Recipe> recipesMap = new HashMap<>();
+    private static int count;
+    private final FileServiceRecipeImpl fileServiceRecipe;
+
+    public RecipesServiceImpl(FileServiceRecipeImpl fileServiceRecipe) {
+        this.fileServiceRecipe = fileServiceRecipe;
+    }
 
     @Override
-    public void addRecipe(Recipe recipe) {
-        recipesMap.put(count++, recipe);
+    public int addRecipe(Recipe recipe) {
+        recipesMap.put(count, recipe);
+        count++;
+        saveToFile();
+        return count-1;
     }
 
     @Override
@@ -25,6 +38,7 @@ public class RecipesServiceImpl implements me.leonidovich.anatoly.belov.webapp.s
     @Override
     public void editRecipe(int id, Recipe recipe) {
         recipesMap.put(id, recipe);
+        saveToFile();
     }
 
     @Override
@@ -32,12 +46,15 @@ public class RecipesServiceImpl implements me.leonidovich.anatoly.belov.webapp.s
         Recipe recipe;
         recipe = getRecipeById(id);
         recipesMap.remove(id);
+        saveToFile();
         return recipe;
+
     }
 
     @Override
     public void deleteAllRecipe() {
         recipesMap.clear();
+        saveToFile();
     }
 
     @Override
@@ -45,4 +62,31 @@ public class RecipesServiceImpl implements me.leonidovich.anatoly.belov.webapp.s
         return recipesMap;
     }
 
+    private void saveToFile() {
+        try {
+            String valueAsString = new ObjectMapper().writeValueAsString(recipesMap);
+            fileServiceRecipe.saveToFile(valueAsString);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    ;
+
+
+    private void readFromFile() {
+        String json = fileServiceRecipe.readFromFile();
+        try {
+            recipesMap = new ObjectMapper().readValue(json, new TypeReference<HashMap<Integer, Recipe>>() {
+            });
+        } catch (JsonProcessingException e) {
+            recipesMap=new HashMap<>();
+        }
+    }
+
+    @PostConstruct
+    private void init() {
+        readFromFile();
+        count = recipesMap.size();
+    }
 }

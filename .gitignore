@@ -33,3 +33,5 @@ build/
 .vscode/
 /.mvn/
 /.idea/
+/src/main/java/me/leonidovich/anatoly/belov/webapp/dataRecipe.json
+/src/main/java/me/leonidovich/anatoly/belov/webapp/dataIngredient.json

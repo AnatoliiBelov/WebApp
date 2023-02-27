@@ -5,7 +5,7 @@ import me.leonidovich.anatoly.belov.webapp.model.Ingredient;
 import java.util.Map;
 
 public interface IngredientsService {
-    void addIngredient(Ingredient ingredient);
+    int addIngredient(Ingredient ingredient);
 
     Ingredient getIngredientById(int id) ;
 
