@@ -21,6 +21,7 @@ public class FileServiceRecipeImpl implements FileService {
             Files.writeString(Path.of(dataFilePath, recipesFileName), json);
             return true;
         } catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
 
@@ -33,6 +34,7 @@ public String readFromFile(){
         try {
             Files.createFile(Path.of(dataFilePath, recipesFileName));
         } catch (IOException ex) {
+            e.printStackTrace();
             throw new RuntimeException(ex);
         }
         return null;

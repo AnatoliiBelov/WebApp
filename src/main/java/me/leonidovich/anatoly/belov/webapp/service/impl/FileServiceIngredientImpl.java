@@ -19,6 +19,7 @@ public class FileServiceIngredientImpl implements FileService {
             Files.writeString(Path.of(dataFilePath, ingredientsFileName), json);
             return true;
         } catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
 
@@ -31,6 +32,7 @@ public class FileServiceIngredientImpl implements FileService {
             try {
                 Files.createFile(Path.of(dataFilePath, ingredientsFileName));
             } catch (IOException ex) {
+                e.printStackTrace();
                 throw new RuntimeException(ex);
             }
         }

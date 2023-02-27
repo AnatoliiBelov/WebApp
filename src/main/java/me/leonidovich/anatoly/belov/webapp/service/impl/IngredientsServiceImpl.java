@@ -64,6 +64,7 @@ public class IngredientsServiceImpl implements me.leonidovich.anatoly.belov.weba
             String valueAsString = new ObjectMapper().writeValueAsString(ingredientMap);
             fileServiceIngredient.saveToFile(valueAsString);
         } catch (JsonProcessingException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

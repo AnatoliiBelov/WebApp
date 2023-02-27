@@ -67,6 +67,7 @@ public class RecipesServiceImpl implements me.leonidovich.anatoly.belov.webapp.s
             String valueAsString = new ObjectMapper().writeValueAsString(recipesMap);
             fileServiceRecipe.saveToFile(valueAsString);
         } catch (JsonProcessingException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
